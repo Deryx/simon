@@ -93,7 +93,9 @@ var simonModule = (function() {
                         play_game();
                     } else {
                         if (strictStatus === "on") {
-                            reset_game();
+													counter.textContent = "! !";
+													counter.style.fontWeight = "bold";
+                          reset_game();
                         } else {
 
                         }
