@@ -80,56 +80,45 @@ var simonModule = (function() {
 
 		var play_game = function() {
 			(function() {
-				counter.textContent = showDoubleDigit(round);
-				playerPattern = [];
-
-				addButton();
-				playComputerPattern();
-				getPlayerPattern();
-
-				setTimeout( function() {
-                    if(arraysAreIdentical(computerPattern, playerPattern)) {
-                        round++;
-                        play_game();
-                    } else {
-											counter.textContent = "! !";
-											counter.style.fontWeight = "bold";
-                      if (strictStatus === "on") {
-                        reset_game();
-                      } else {
-												playComputerPattern();
-												getPlayerPattern();
-												if(arraysAreIdentical(computerPattern, playerPattern)) {
-													round++;
-													play_game();
-												}
-                      }
-                    }
-				}, round * 3000 );
-			})(round);
-		}
-
-    /*
-		var play_game = function() {
-
-
-				if( arraysAreIdentical( computerPattern, playerPattern ) ) {
-					return setTimeout( function() {
-						play_game();
-						playerPattern = [];
-						round++;
-					}, round * 3000 )
-				} else {
-					computerPattern = [];
-
+				if(round < 21) {
+					counter.textContent = showDoubleDigit(round);
 					playerPattern = [];
 
-					round = 1;
-				}
+					addButton();
+					playComputerPattern();
+					getPlayerPattern();
+
+					setTimeout( function() {
+	        	if(arraysAreIdentical(computerPattern, playerPattern)) {
+	          	round++;
+	            play_game();
+	          } else {
+							counter.textContent = "! !";
+							counter.style.fontWeight = "bold";
+	            if (strictStatus === "on") {
+	            	reset_game();
+	            } else {
+								playComputerPattern();
+								getPlayerPattern();
+								if(arraysAreIdentical(computerPattern, playerPattern)) {
+									round++;
+									play_game();
+								}
+	            }
+	        }
+				}, round * 3000 );
+			} else {
+				$( '#winner-lightbox > div > h1' ).text( "Congratulations! You beat Simon!" );
+
+	      $( 'body' ).showlightbox();
+	      $( '#winner-lightbox' ).fadeIn();
+
+				setTimeout(reset_game, 2000);
 			}
-		}
-   */
-			play_game();
+		})(round);
+	}
+
+		play_game();
 	});
 
 	function addButton() {
