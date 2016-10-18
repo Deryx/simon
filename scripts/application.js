@@ -6,7 +6,7 @@ var simonModule = (function() {
 		{color: "#F5AB35", sound: "https://s3.amazonaws.com/freecodecamp/simonSound4.mp3"}
 	];
 
-	var lightTime = 500;
+	var lightTime = 800;
 
 	var maxRounds = 20;
 
@@ -106,7 +106,7 @@ var simonModule = (function() {
 								}
 	            }
 	        }
-				}, round * 3000 );
+				}, round * 2400 );
 			} else {
 				$( '#winner-lightbox > div > h1' ).text( "Congratulations! You beat Simon!" );
 
@@ -136,7 +136,7 @@ var simonModule = (function() {
 		playSound( btn );
 		setTimeout( function() {
 			button.style.backgroundColor = originalColor;
-		}, lightTime);
+		}, lightTime/2);
 	}
 
 	function LightenDarkenColor( col, amt ) {
