@@ -92,11 +92,18 @@ var simonModule = (function() {
                         round++;
                         play_game();
                     } else {
-                        if (strictStatus === "on") {
-                            reset_game();
-                        } else {
-
-                        }
+											counter.textContent = "! !";
+											counter.style.fontWeight = "bold";
+                      if (strictStatus === "on") {
+                        reset_game();
+                      } else {
+												playComputerPattern();
+												getPlayerPattern();
+												if(arraysAreIdentical(computerPattern, playerPattern)) {
+													round++;
+													play_game();
+												}
+                      }
                     }
 				}, round * 3000 );
 			})(round);
