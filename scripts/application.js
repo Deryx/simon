@@ -8,12 +8,10 @@ var simonModule = (function() {
 
 	var lightTime = 500;
 
-
-	var round = 1;
 	var maxRounds = 20;
 
 	var clicks = 0;
-	
+
 	// Control switch statuses
 	var switchStatus = "off";
 	var strictStatus = "off";
@@ -68,39 +66,63 @@ var simonModule = (function() {
 
 	var startButton = document.querySelector( '.start' );
 	startButton.addEventListener( 'click', function( evt ) {
+		evt.preventDefault();
+		var arraysIdentical = true;
 		computerPattern = [];
+		playerPattern = [];
 
 		if( switchStatus === "on" ) {
+			console.log(strictStatus);
 			computerPattern = [];
 			playerPattern = [];
 			round = 1;
 		}
 
-		(function playGame() {	
-			(function playRound() {
-				counter.textContent = showDoubleDigit( round );
-				
-				playComputerPattern( round );
-				
-				setTimeout( getButtonClick(), round * 1500 );
-				
-				if( round < maxRounds ) {
-					if( arraysAreIdentical( computerPattern, playerPattern ) ) {
-						setTimeout( playGame, round * 3000 );
-						
-						playerPattern = [];
+		var play_game = function() {
+			(function() {
+				counter.textContent = showDoubleDigit(round);
+				playerPattern = [];
 
-						round++;
-					} else {
-						computerPattern = [];
-						
+				addButton();
+				playComputerPattern();
+				getPlayerPattern();
+
+				setTimeout( function() {
+                    if(arraysAreIdentical(computerPattern, playerPattern)) {
+                        round++;
+                        play_game();
+                    } else {
+                        if (strictStatus === "on") {
+                            reset_game();
+                        } else {
+
+                        }
+                    }
+				}, round * 3000 );
+			})(round);
+		}
+
+    /*
+		var play_game = function() {
+
+
+				if( arraysAreIdentical( computerPattern, playerPattern ) ) {
+					return setTimeout( function() {
+						play_game();
 						playerPattern = [];
-						
-						round = 1;
-					}
+						round++;
+					}, round * 3000 )
+				} else {
+					computerPattern = [];
+
+					playerPattern = [];
+
+					round = 1;
 				}
-			})();
-		})();
+			}
+		}
+   */
+			play_game();
 	});
 
 	function addButton() {
@@ -113,17 +135,15 @@ var simonModule = (function() {
 		var lightColor = LightenDarkenColor( originalColor, 90 );
 
 		var button = document.querySelector( "[id='" + btn + "']" );
-		button.style.background = lightColor;
+		button.style.backgroundColor = lightColor;
 
 		playSound( btn );
-
 		setTimeout( function() {
 			button.style.backgroundColor = originalColor;
 		}, lightTime);
 	}
 
 	function LightenDarkenColor( col, amt ) {
-
 		var usePound = false;
 
 		if (col[0] == "#") {
@@ -160,21 +180,17 @@ var simonModule = (function() {
 		button.innerHTML = "<source src='" + sound + "'>";
 		button.play();
 	}
-	
-	function playComputerPattern( rnd ) {
-		var index = 0;
 
-		addButton();
-		(function sequence() {
-			var button = computerPattern[ index ];
-			lightButton( button );
-
-			if( index < rnd ) {
-				setTimeout( sequence, 2000 );
-				
-				index++;
-			}
-		})();
+	function playComputerPattern() {
+		console.log(computerPattern);
+		for (var i = 0; len = computerPattern.length, i < len; i++) {
+			(function(i) {
+				setTimeout(function() {
+					var button = computerPattern[i];
+					lightButton(button);
+				}, i * lightTime);
+			})(i);
+		}
 	}
 
 	function getButtonClick() {
@@ -186,20 +202,30 @@ var simonModule = (function() {
 
 			if( !isNaN( target.id ) ) {
 				btnClicked = target.id;
-				playerPattern.push( btnClicked );
+				playerPattern.push( parseInt(btnClicked) );
 				lightButton( btnClicked );
 			}
 		};
 	}
-	
+
+	function getPlayerPattern() {
+		for (var i = 0; len = computerPattern.length, i < len; i++) {
+			(function(i) {
+				setTimeout(function() {
+					getButtonClick();
+				}, i * lightTime);
+			})(i);
+		}
+	}
+
 	function arraysAreIdentical( arr1, arr2 ) {
-		if( arr1.length !== arr2.length ) return false;
-		for( var i = 0, len = arr1.length; i < len; i++ ) {
-			if( arr1[i] !== arr2[2] ) {
+		if( arr1.length !== arr2.length )
+			return false;
+		for( var i = 0, len = arr1.length; i <= len; i++ ) {
+			if( arr1[i] !== arr2[i] ) {
 				return false;
 			}
 		}
-		
 		return true;
 	}
 
@@ -213,5 +239,9 @@ var simonModule = (function() {
 
 	function randomButton() {
 		return Math.floor( Math.random() * 4 );
+	}
+
+	function reset_game(){
+		location.reload();
 	}
 })();
